@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <title>Raspberry Pi HID</title>
+        <link rel="stylesheet" href="style.css">
+    </head>
+    <body>
+        <header>
+            <div class="text">
+                <h3><a href="/index.html">< Back</a></h3>
+            </div>
+        </header>
+
+        <section>
+            <div class="project-desc">
+                <br>
+                <h1>Raspberry Pi Keyboard+Mouse Demonstrator</h1>
+                <p>Languages: C, C++</p>
+                <div class="video-wrap">
+                    <iframe src="https://www.youtube.com/embed/0Ury7U9TjUQ?si=fY1xpSOYTTVIA1mH" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+                </div>
+                <p>
+                    This project's goal was to experiment with both hardware and software, using 
+                    real-world applications such as Bluetooth. The product is a human interface 
+                    device (HID) with 8 buttons and a joystick, capable of sending keyboard and 
+                    mouse inputs to Windows 11 computers. A host-app runs on the computer and 
+                    allows two-way communication with the device.
+                </p>
+                <p>TLDR: The video summarizes this project.</p>
+                <h3>Hardware</h3>
+                <p>- Raspberry Pi Pico W (with wireless capaiblities)<br>- 8 push buttons<br>- 2-axis joystick</p>
+                <h3>Firmware</h3>
+                <p>
+                    The device has two modes, wired and bluetooth. The firmware, written in C, 
+                    reads inputs from the buttons and joystick and sends them to the computer.
+                </p>
+                <p>
+                    In wired mode, the device uses TinyUSB, a library that allows wired
+                    communication from the Pico W to the computer. The computer recognizes the 
+                    device as a keyboard and the firmware sends keyboard inputs to Windows' keyboard drivers.
+                </p>
+                <p>    
+                    In Bluetooth mode, the firmware 
+                    uses the BTStack library, enabling Bluetooth communication and meaning the 
+                    device does not need to be plugged into the computer, only to a power source.
+                    The Pico W uses on-board flash memory to remember previous connections and
+                    reconnect automatically after losing power. 
+                </p>
+                <h3>Software</h3>
+                <p>
+                    A custom made host app can be used on the computer to interface with the device.
+                    While the device communicates with the computer, the host app enables the
+                    computer to communicate with the device. This enables functions like updating
+                    the device's firmware without putting the Pico W into boot mode (i.e. while
+                    the device is functioning). This host app is entirely optional as the device
+                    can still send keyboard and mouse inputs without it.
+                </p>
+                <h3>Capabilities</h3>
+                <p>
+                    The 8 buttons send keyboard inputs corresponding to F13-F20, rarely used keys.
+                    Meanwhile, the joystick can simultaneously move the mouse. The 8 buttons can be
+                    remapped to other keys by changing the firmware. This method changes what keys
+                    the device itself sends. Other methods includ
+                    using third party software, such as 
+                    <a href="https://www.autohotkey.com/" target="_blank"">AutoHotkey</a> (AHK).
+                    Using AHK scripts, the F13-F20 keys can be reassigned to other keys or even
+                    actions. The host app 
+                    also can remap keys. Within the host app, buttons can be assigned to keys
+                    or actions including volume up/down, CTRL+C, or open an application.
+                    Notably, the host app reads the raw button states (which buttons are pressed), 
+                    bypassing the Windows keyboard driver. This means instead of reading F13-F20, 
+                    the host app reads button 1, button 2, etc. For applications such as a game
+                    controller, reading the raw button states instead of going through the
+                    keyboard driver woud be beneficial. <br><br> In Bluetooth mode, the device
+                    retains full functionality. The only functional difference is that it
+                    communicates wirelessly rather than through a USB port. 
+                </p>
+                <h3>Limitations</h3>
+                <p>
+                    It was initially attempted to use BTStack's classic Bluetooth implementation.
+                    However, this implementation was laden with difficulties. The device would be
+                    recognizable to Windows, however when attempting to connect, the device would
+                    always disconnect after 3-10 seconds. When running 
+                    BTStack's own Bluetooth demo, it would encounter the same issue.
+                    Thorough troubleshooting revealed the
+                    issue was with Windows 11's Bluetooth compatibility policy. Indeed, when
+                    connecting to an Android device, no issues were encountered. Windows 11 was 
+                    terminating the connection and there was seemingly no solution, as even 
+                    BTStack's own example failed to work. 
+                </p>
+                <p>
+                    The work-around involved using BTStack's Bluetooth Low Energy (BLE) implementation. 
+                    This resolved the disconnection issue, however, the device suffered from very
+                    poor latency. This made it unusable in time-critical applications such as a 
+                    game controller. The Bluetooth connection was also poor, as the device would
+                    disconnect intermittently. A future iteration of this device would use a 
+                    different Bluetooth implementation, in an attempt to pass Windows security
+                    checks while maintaining usable latency and connection strength.
+                </p>
+                <h3>Libraries and Resources Used</h3>
+                <a href="https://www.raspberrypi.com/documentation/microcontrollers/c_sdk.html" target="_blank">- Raspberry Pi SDK</a><br>
+                <a href="https://docs.tinyusb.org/en/latest/index.html" target="_blank">- TinyUSB</a><br>
+                <a href="https://github.com/bluekitchen/btstack" target="_blank">- BTStack</a><br>
+                <a href="https://github.com/libusb/hidapi" target="_blank">- hidapi</a>
+            </div>
+        </section>
+    </body>
+</html>

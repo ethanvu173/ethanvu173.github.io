@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <title>Acoustic Insect Detection</title>
+        <link rel="stylesheet" href="style.css">
+    </head>
+    <body>
+        <header>
+            <div class="text">
+                <h3><a href="/index.html">< Back</a></h3>
+            </div>
+        </header>
+
+        <section>
+            <div class="project-desc">
+                <br>
+                <h1>Outdoor Acoustic Insect Detection Device</h1>
+                <p>
+                    Languages: Python<br>
+                    In collaboration with <a href="https://ca.linkedin.com/in/nicolas-kaye-4005552b4" target="_blank">Nicolas Kaye</a>,
+                    <a href="https://github.com/esicoe" target="_blank">Edward Sicoe</a>,
+                    <a href="https://ca.linkedin.com/in/armaan-osahan-967091373" target="_blank">Armaan Osahan</a>, and Martin Thomas Moreno.
+                </p>
+                <div class="video-wrap">
+                    <iframe src="https://www.youtube.com/embed/rGXS2BltB88?si=1nflN-20KZe4_vAo" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+                    <p class="caption">Video edited by Nicolas Kaye</p>
+                </div>
+                <p>
+                    This was an academic project spanning the entire winter semester. In a team
+                    with 4 peers, we were approached by a real client, <a href="https://oakstreetgarden.wordpress.com/" target="_blank">Oak Street Garden</a>,
+                    and given a real issue to solve: We were to design a device to aid the garden
+                    in understanding what pollinators were present and when. Over 4 months, we had 
+                    produced a weather-proof listening device, along with external
+                    software to analyze the audio, and a website to provide a visual summary.
+                    Throughout the project, I was primarily responsible for designing the 
+                    audio analysis software.
+                </p>
+                <h3>Hardware</h3>
+                <p>- ESP32<br>- INMP441 microphone<br>- SD Card<br>- 10,000 mAH battery<br>- PLA filament</p>
+                <h3>Device Functions</h3>
+                <p>
+                    The device itself was designed to remain outdoors for 8 hours, roughly a full
+                    work day for the client. PSA filament was used for the exterior, as it offered
+                    acceptable environmental resistance while being readily available. Construction
+                    of the device was also sealed as tightly as possible, and battery life was an
+                    estimated 47 hours. 
+                </p>
+                <p>
+                    The device listens using its INMP441 microphone, a small mic that is responsive
+                    to relevant insect frequencies. These recordings are saved to an
+                    on-board SD card that can be removed for audio analysis.
+                </p>
+                <h3>Software</h3>
+                <p>
+                    This was my area of responsibility. To detect insect sounds, the Python library <a href="https://opensoundscape.org/en/latest/" target="_blank">openSoundscape</a>
+                    was used. From Kitzes Lab at the University of Pittsburg, openSoundscape offers
+                    several tools to make machine learning models specifically for animal noise 
+                    recognition.
+                </p>
+                <h4>  Convolutonal Neural Networks</h4>
+                <p>
+                    Specifically, openSoundscape creates convolutional neural networks (CNN), a type of
+                    classifier (models designed to classify data.) These CNN's identify specific
+                    sounds by examining the spectrogram (visual representation of audio), and 
+                    recognizing which parts of the spectrogram resemble what it was trained on. 
+                    openSoundscape lists example uses for these models as bird or frog calls. 
+                    However, insect noises would have been a novel application and more challenging.
+                    While some insects like crickets or cicadas are notoriously loud, we were
+                    looking for pollinators like bees and wasps. Their buzzes are much more quiet.
+                    Our training ensured our model would effectively identify these sounds.
+                </p>
+                <h4>  Training</h4>
+                <p>
+                    Training data for our model was primarily sourced from 
+                    <a href="https://www.kaggle.com/datasets/hesi0ne/insectsound1000" target="_blank">InsectSound1000</a>,
+                    a dataset containing 95.6 GB-worth of audio from 12 insect species. This 
+                    dataset offered a plethora of high quality clips specifically designed 
+                    for audio recognition tasks like this. It was also one of the only 
+                    suitable datasets that was freely available, as budget was a major consideration.
+                    That being said, it wasn't perfect. InsectSound1000 is 
+                    geared towards European insects, meaning many were not relevant to Kingston,
+                    Ontario. Still, it was decided that <i>Bombus terrestris</i> (buff-tailed
+                    bumblebee, extant in Europe) would be an acceptable stand-in for North American 
+                    bees. Other North American insects were included, mainly pests such as gnats
+                    and stink bugs. Insects not present in North America comprised the negative 
+                    data for training and testing. 
+                    In total, over 12,000 audio clips were used, totalling 8 GB.
+                    For a rough prototype, that was enough to make an effective model. 
+                </p>
+                <h4>  Testing and Results</h4>
+                <p>
+                    The effectiveness for the model was determined using its F1 score. Simply put,
+                    it is a single number that quantifies its accuracy, i.e. how many positive 
+                    predictions were correct out of all positive predictions, <b>and</b> how many
+                    positive predictions were correct out of all actual positives. This score ranges
+                    from 0, indicating total failure, to 1, meaning it classified everything correctly.
+                </p>
+                <p>
+                    Over 8200 audio clips were used in testing, equivalent to 5.2 GB. Of course,
+                    the testing data was seperate from the training set. The resulting
+                    F1 score was consistently around 0.90, indicating a highly effective model at
+                    identifying <i>Bombus terrestris</i> and certain pests. 
+                </p>
+                <p>
+                    It was originally intended to test the device and software in an outdoor 
+                    environment. Unfortunately, this project took place during the winter
+                    term. The weather during this time was not conducive to insect activity. 
+                </p>
+                <h4>  Limitations</h4>
+                <p>
+                    Improvements to the device's software would prioritize more data, and 
+                    more relevant data. While InsectSound1000 provides vast amounts of high 
+                    quality data, for Oak Street Garden, it is more relevant to target specifically
+                    North American pollinators. Unfortunately, such datasets are difficult to obtain;
+                    For example, most datasets on honeybees are concerned with hive sounds. This 
+                    would be irrelevant to our client, interested in pollinator population and not 
+                    hives specifically.
+                </p>
+                <p>
+                    Also, it was intended to run the analysis software on the device itself.
+                    However, due to a quirk with openSoundscape, it must be run on a Linux device
+                    (or virtual machine). This seems to be a common limitation with Python machine 
+                    learning libraries. Future iterations of the device would either use a different 
+                    microcontroller capable of running Linux, or use an ML library that does not
+                    have such restrictions.
+                </p>
+                <h4>  Website</h4>
+                <p>
+                    While the website was not my responsibility, it ties in closely with my analysis 
+                    software. When the machine learning model analyses a set of recordings, it 
+                    outputs its predictions to a CSV and JSON file (to give my web development 
+                    peers flexibility). The files are then uploaded to the website, which is hosted
+                    on a different device, and it provides an intuitive, visual summary of the
+                    analysis. 
+                </p>
+            </div>
+        </section>
+    </body>
+</html>
