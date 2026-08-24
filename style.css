@@ -95,3 +95,9 @@ header p {
     height: 100%;
     border-radius: 6px;
 }
+
+.video-wrap img {
+    width: 100%;
+    height: auto;
+    display: block;
+}
