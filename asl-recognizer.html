@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <title>ASL Alphabet Recognizer</title>
+        <link rel="stylesheet" href="style.css">
+    </head>
+    <body>
+        <header>
+            <div class="text">
+                <h3><a href="/index.html">< Back</a></h3>
+            </div>
+        </header>
+
+        <section>
+            <div class="project-desc">
+                <br>
+                <h1>ASL Alphabet Recognizer</h1>
+                <a href="https://github.com/ethanvu173/asl_recognizer" target="_blank">Github</a>
+                <p>Apr 2026 - May 2026<br>Languages: Python</p>
+                <p>
+                    This project was a demonstrator for computer vision applications using OpenCV and MediaPipe.
+                    Its function is to detect the ASL alphabet and print a sentence, letter by letter, in the 
+                    terminal. A user can sign a letter and hold it for ~2 seconds to type it, sign "yes" to
+                    add a space, and sign "no" to delete a character. Overall, the project was successful at
+                    demonstrating the OpenCV and MediaPipe's practical applications at a small scale. 
+                </p>
+                <h3>MediaPipe landmarking</h3>
+                <p>
+                    Google's MediaPipe is a library that provides tools for several computer vision tasks. 
+                    Among them is a hand landmarking toolset. It is able to detect multiple hands, identify
+                    left and right hands, and locate specific hand landmarks, like wrist, knuckles,
+                    joints, and finger tips. In this project, only one right hand at a time was supported for ASL
+                    detection.
+                </p>
+                <h3>Algorithm and training</h3>
+                <div class="video-wrap">
+                    <img src="asldemo.png" alt="A hand signing 'A', with the program detecting it with 73% confidence.">
+                    <p class="caption">
+                        An example of how the program recognizes hand signs, with confidence shown. The hand landmark 
+                        overlay is from a <a href="https://colab.research.google.com/github/googlesamples/mediapipe/blob/main/examples/hand_landmarker/python/hand_landmarker.ipynb" target="_blank">
+                            Google example of MediaPipe hand landmarker</a>, but the rest is by me.
+                    </p>
+                </div>
+                <p>
+                    A classifier algorithm was trained using scikit-learn (specifically a random forest classifer).
+                    To train it, it takes the position of the hand landmarks and normalizes it to the wrist, so that 
+                    detection works with the hand anywhere on the screen. The data used to train was a mix of data from 
+                    <a href="https://www.kaggle.com/datasets/grassknoted/asl-alphabet" target="_blank">Kaggle</a> and my own data. 
+                    Custom training data can be made by the user with a Python script. It would let the user type which letter they are signing, have them sign it in front 
+                    of the camera, and write the positions of the landmarks to a CSV file every frame for 300 frames. 
+                    This meant there are 300 custom data points for each letter. Combined with the Kaggle dataset, that 
+                    is acceptable for a small application like this. 
+                </p>
+                <p>
+                    When running the recognizer program, the classifier attempts to categorize the hand landmarks it is
+                    currently seeing. The program will then show the letter and its confidence on screen if its confidence 
+                    is over 50%.
+                </p>
+                <h3>Movement based signs</h3>
+                <p>
+                    Some signs require movement, such as J and Z. The user can also sign "yes" which requires movement (this 
+                    project uses a variant of "no" that does not require movement). As the classifier only works on stationary 
+                    signs, the method of detecting these signs are different. The program instead looks for movement of specific 
+                    landmarks, comparing the location of specific points over time. For instance, to detect "Z", the program looks
+                    at the index fingertip trajector and checks for the "Z" motion. Some rejections for false positives do exist,
+                    such as with "J" detection, in which the program will only recognize a J if the pinky moves significantly more than the index.
+                    This is to reject cases where the hand is simply moving around and "J" is not being signed. 
+                </p>
+                <h3>Limitations</h3>
+                <p>
+                    The main limitation of this project was the camera quality. I unfortunately only had access to a built-in 
+                    webcam, limiting camera quality. The result was that the image was poor regardless of lighting and motion 
+                    was extremely hard to detect due to motion smearing. Further development of this project can only continue 
+                    once better equipment is acquired. 
+                </p>
+                <h3>Libraries and Resources Used</h3>
+                <a href="https://colab.research.google.com/github/googlesamples/mediapipe/blob/main/examples/hand_landmarker/python/hand_landmarker.ipynb" target="_blank">- MediaPipe Hand Landmarker</a><br>
+                <a href="https://opencv.org/" target="_blank">- OpenCV</a><br>
+                <a href="https://scikit-learn.org/stable/" target="_blank">- scikit-learn</a><br>
+        </section>
+    </body>
+</html>
